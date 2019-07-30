@@ -1,6 +1,9 @@
 package com.apark.bdddemo.utils;
 
 import com.jayway.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 public class RequestResponseHandler {

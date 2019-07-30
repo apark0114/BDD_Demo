@@ -9,7 +9,7 @@ public class JsonUtil {
     public static void verifyPathAndValueExist(Map<String, String> checkResponse, Response response) {
 
         for (String key: checkResponse.keySet()) {
-            String value = response.getBody().jsonPath().get(key);
+            String value = response.getBody().jsonPath().get(key).toString();
             Assert.assertEquals(checkResponse.get(key), value);
         }
     }

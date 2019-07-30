@@ -3,7 +3,7 @@ Feature: Flickr Rest API
   @get_latest_photos
    Scenario Outline: request latest photos
      Given I add following headers:
-       | Accept   | application/json |
+       | Accept   | application/json        |
      And I add following parameters:
        | format   | json                    |
        | method   | flickr.photos.getRecent |
@@ -11,66 +11,64 @@ Feature: Flickr Rest API
      And I make a "GET" request
      Then I receive a response code 200
 
-    @preprod
-    Examples:
-      |  api_key        |
-      |  preprod_key    |
-
     @production
     Examples:
-      |  api_key        |
-      |  production key |
+      |  api_key                            |
+      |  <.. INSERT FLICKR API KEY HERE ..> |
 
 
   @request_with_bad_key
   Scenario Outline:  request api with apikey error
     Given I add following headers:
-      | Accept   | application/json |
+      | Accept          | application/json  |
+
     And I add following parameters:
-      | format   | json             |
-      | api_key  | <api_key>        |
+      | format          | json              |
+      | api_key         | <api_key>         |
+      | method          | <method>          |
+      | nojsoncallback  | 1                 |
     And I make a "GET" request
-    Then I receive a response code 403
-    Then I verify response contains following json response:
-      | message  | <error_message>  |
-      | stat     | fail             |
+    Then I verify response contains following text response:
+      | <error_message> |
+
 
     @production @invalid
     Examples:
-      | api_key         | error_message                             |
-      | invalid_key     | Invalid API Key (Key has invalid format)  |
+      | api_key                             | method                  | error_message                           |
+      | invalid_key                         | flickr.photos.getRecent | Invalid API Key (Key has invalid format)|
 
     @production @suspend
     Examples:
-      | api_key         | error_message                             |
-      | suspended_key   | Invalid API Key (Key has been suspended)  |
+      | api_key                             | method                  | error_message                           |
+      |  <.. INSERT FLICKR API KEY HERE ..> | unknown.method          |  "Method \"unknown.method\" not found"  |
 
 
   @pagination
   Scenario Outline: Fetch latest photos with pagination defined
     Given I add following headers:
-      | Accept   | application/json |
+      | Accept          | application/json        |
     And I add following parameters:
-      | format   | json                    |
-      | per_page | <per_page>              |
-      | method   | flickr.photos.getRecent |
-      | api_key  | <api_key>               |
+      | format          | json                    |
+      | nojsoncallback  | 1                       |
+      | per_page        | <per_page>              |
+      | method          | flickr.photos.getRecent |
+      | api_key         | <api_key>               |
     And I make a "GET" request
     Then I receive a response code 200
     Then I verify response contains following json response:
-      |  photos.perpage | <per_page>       |
+      |  photos.perpage | <per_page>              |
 
     @production
     Examples:
-      |  api_key        |  per_page     |
-      |  production key |   0           |
+      |  api_key                            |  per_page    |
+      |  <.. INSERT FLICKR API KEY HERE ..> |   1          |
 
     @production
     Examples:
-      |  api_key        |  per_page     |
-      |  production key |   5           |
+      |  api_key                            |  per_page    |
+      |  <.. INSERT FLICKR API KEY HERE ..> |   5          |
 
     @production
     Examples:
-      |  api_key        |  per_page     |
-      |  production key |   1000        |
+      |  api_key                            |  per_page    |
+      |  <.. INSERT FLICKR API KEY HERE ..> |   100        |
